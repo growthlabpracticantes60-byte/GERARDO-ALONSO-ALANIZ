@@ -1,0 +1,79 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    match /test/{testId} {
+      allow read: if true;
+    }
+
+    match /empresas/{empresaId} {
+      allow read: if true;
+      allow create, update: if isValidId(empresaId)
+        && request.resource.data.nombre is string
+        && request.resource.data.nombre.size() > 0;
+      allow delete: if isValidId(empresaId);
+    }
+
+    match /productos/{productoId} {
+      allow read: if true;
+      allow create, update: if isValidId(productoId)
+        && request.resource.data.codigo is string
+        && request.resource.data.codigo.size() > 0
+        && request.resource.data.nombre is string
+        && request.resource.data.nombre.size() > 0;
+      allow delete: if isValidId(productoId);
+    }
+
+    match /lotes/{loteId} {
+      allow read: if true;
+      allow create, update: if isValidId(loteId)
+        && request.resource.data.numeroLote is string
+        && request.resource.data.numeroLote.size() > 0
+        && request.resource.data.productoId is string
+        && request.resource.data.cantidadInicial is number
+        && request.resource.data.cantidadInicial >= 0;
+      allow delete: if isValidId(loteId);
+    }
+
+    match /movimientos/{movimientoId} {
+      allow read: if true;
+      allow create, update: if isValidId(movimientoId)
+        && request.resource.data.loteId is string
+        && request.resource.data.loteId.size() > 0
+        && request.resource.data.etapa is string
+        && request.resource.data.operador is string
+        && request.resource.data.cantidadProcesada is number
+        && request.resource.data.cantidadProcesada >= 0;
+      allow delete: if isValidId(movimientoId);
+    }
+
+    match /piezas/{piezaId} {
+      allow read: if true;
+      allow create, update: if isValidId(piezaId)
+        && request.resource.data.numeroSerie is string
+        && request.resource.data.numeroSerie.size() > 0
+        && request.resource.data.loteId is string
+        && request.resource.data.productoId is string;
+      allow delete: if isValidId(piezaId);
+    }
+
+    match /movimientos_piezas/{movimientoPiezaId} {
+      allow read: if true;
+      allow create, update: if isValidId(movimientoPiezaId)
+        && request.resource.data.piezaId is string
+        && request.resource.data.piezaId.size() > 0
+        && request.resource.data.etapa is string
+        && request.resource.data.operador is string;
+      allow delete: if isValidId(movimientoPiezaId);
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

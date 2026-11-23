@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix SISTEMA DE TRAZABILIDAD POR LOTE Y PRODUCTO",
+  "description": "Sistema de Trazabilidad Industrial por Lote y Producto",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

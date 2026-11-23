@@ -1,0 +1,130 @@
+{
+  "entities": {
+    "Producto": {
+      "title": "Producto",
+      "description": "Producto manufacturado o componente",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "codigo": { "type": "string" },
+        "nombre": { "type": "string" },
+        "descripcion": { "type": "string" },
+        "unidad": { "type": "string" },
+        "fechaCreacion": { "type": "string" }
+      },
+      "required": ["codigo", "nombre", "unidad"]
+    },
+    "Lote": {
+      "title": "Lote",
+      "description": "Lote de producción asociado a un producto",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "numeroLote": { "type": "string" },
+        "productoId": { "type": "string" },
+        "cantidadInicial": { "type": "number" },
+        "unidad": { "type": "string" },
+        "lineaProduccion": { "type": "string" },
+        "fechaProduccion": { "type": "string" },
+        "estado": { "type": "string" },
+        "fechaCreacion": { "type": "string" }
+      },
+      "required": ["numeroLote", "productoId", "cantidadInicial", "unidad", "lineaProduccion", "fechaProduccion", "estado"]
+    },
+    "Movimiento": {
+      "title": "Movimiento",
+      "description": "Avance de etapa o inspección registrado para un lote",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "loteId": { "type": "string" },
+        "etapa": { "type": "string" },
+        "estado": { "type": "string" },
+        "cantidadProcesada": { "type": "number" },
+        "operador": { "type": "string" },
+        "observaciones": { "type": "string" },
+        "fechaHora": { "type": "string" }
+      },
+      "required": ["loteId", "etapa", "estado", "cantidadProcesada", "operador", "fechaHora"]
+    },
+    "PiezaSerializada": {
+      "title": "PiezaSerializada",
+      "description": "Unidad o componente individual con número de serie único y trazabilidad unitaria",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "numeroSerie": { "type": "string" },
+        "loteId": { "type": "string" },
+        "productoId": { "type": "string" },
+        "productoNombre": { "type": "string" },
+        "etapaActual": { "type": "string" },
+        "estado": { "type": "string" },
+        "estacionActual": { "type": "string" },
+        "fechaCreacion": { "type": "string" },
+        "fechaUltimoAvance": { "type": "string" },
+        "operadorUltimo": { "type": "string" }
+      },
+      "required": ["numeroSerie", "loteId", "productoId", "etapaActual", "estado", "fechaCreacion"]
+    },
+    "MovimientoPieza": {
+      "title": "MovimientoPieza",
+      "description": "Historial de avance, inspección o prueba de una pieza individual",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "piezaId": { "type": "string" },
+        "etapa": { "type": "string" },
+        "estado": { "type": "string" },
+        "estacion": { "type": "string" },
+        "operador": { "type": "string" },
+        "observaciones": { "type": "string" },
+        "fechaHora": { "type": "string" }
+      },
+      "required": ["piezaId", "etapa", "estado", "operador", "fechaHora"]
+    },
+    "Empresa": {
+      "title": "Empresa",
+      "description": "Organización o filial industrial en el entorno multi-tenant MERKATICS",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nombre": { "type": "string" },
+        "siglas": { "type": "string" },
+        "rfc": { "type": "string" },
+        "sector": { "type": "string" },
+        "plantaPrincipal": { "type": "string" },
+        "prefijoLote": { "type": "string" },
+        "colorHex": { "type": "string" },
+        "activo": { "type": "boolean" },
+        "fechaRegistro": { "type": "string" }
+      },
+      "required": ["nombre", "siglas", "sector", "prefijoLote", "colorHex"]
+    }
+  },
+  "firestore": {
+    "/empresas/{empresaId}": {
+      "schema": { "$ref": "#/entities/Empresa" },
+      "description": "Registro de empresas, filiales y sedes industriales"
+    },
+    "/productos/{productoId}": {
+      "schema": { "$ref": "#/entities/Producto" },
+      "description": "Catálogo de productos de manufactura"
+    },
+    "/lotes/{loteId}": {
+      "schema": { "$ref": "#/entities/Lote" },
+      "description": "Lotes de producción"
+    },
+    "/movimientos/{movimientoId}": {
+      "schema": { "$ref": "#/entities/Movimiento" },
+      "description": "Registro cronológico de movimientos de trazabilidad"
+    },
+    "/piezas/{piezaId}": {
+      "schema": { "$ref": "#/entities/PiezaSerializada" },
+      "description": "Trazabilidad de piezas individuales y números de serie"
+    },
+    "/movimientos_piezas/{movimientoPiezaId}": {
+      "schema": { "$ref": "#/entities/MovimientoPieza" },
+      "description": "Historial cronológico por estación de cada pieza serializada"
+    }
+  }
+}
